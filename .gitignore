@@ -1,0 +1,13 @@
+# macOS
+.DS_Store
+.AppleDouble
+
+# editors
+.vscode/
+.idea/
+*.swp
+*~
+
+# scratch / drafts
+scratch/
+*.draft.md

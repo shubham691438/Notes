@@ -1,0 +1,1021 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<title>Docker for Spring Boot Interviews</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+
+<style>
+  :root{
+    --paper:#EEF1F3;
+    --surface:#FFFFFF;
+    --surface-2:#E3E9EC;
+    --ink:#0F1D24;
+    --ink-2:#33474F;
+    --muted:#66787F;
+    --rule:#D2DADE;
+    --rule-strong:#B6C3C8;
+    --accent:#0B6D82;
+    --accent-ink:#075466;
+    --accent-soft:#DBEAEE;
+    --signal:#A2472A;
+    --signal-soft:#F3E3DC;
+    --code-bg:#0F2027;
+    --code-ink:#D3E2E6;
+    --code-dim:#7E9AA2;
+    --shadow:0 1px 2px rgba(15,29,36,.06), 0 8px 24px -16px rgba(15,29,36,.35);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#0C181E;
+      --surface:#122229;
+      --surface-2:#1A2E36;
+      --ink:#E5EDF0;
+      --ink-2:#B4C6CC;
+      --muted:#88A0A8;
+      --rule:#24393F;
+      --rule-strong:#33505A;
+      --accent:#54B7CF;
+      --accent-ink:#8AD2E4;
+      --accent-soft:#123640;
+      --signal:#E28B6D;
+      --signal-soft:#39241B;
+      --code-bg:#081317;
+      --code-ink:#D3E2E6;
+      --code-dim:#6E8A92;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.9);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#0C181E;
+    --surface:#122229;
+    --surface-2:#1A2E36;
+    --ink:#E5EDF0;
+    --ink-2:#B4C6CC;
+    --muted:#88A0A8;
+    --rule:#24393F;
+    --rule-strong:#33505A;
+    --accent:#54B7CF;
+    --accent-ink:#8AD2E4;
+    --accent-soft:#123640;
+    --signal:#E28B6D;
+    --signal-soft:#39241B;
+    --code-bg:#081317;
+    --code-ink:#D3E2E6;
+    --code-dim:#6E8A92;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -18px rgba(0,0,0,.9);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"IBM Plex Serif","Iowan Old Style",Georgia,serif;
+    font-size:17px;
+    line-height:1.62;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1160px;margin:0 auto;padding:0 24px 96px;}
+
+  /* ---------- masthead ---------- */
+  .masthead{
+    border-bottom:1px solid var(--rule);
+    padding:56px 0 32px;
+    display:flex;flex-direction:column;gap:18px;
+  }
+  .eyebrow{
+    font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+    font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--accent-ink);margin:0;
+  }
+  h1{
+    font-family:"IBM Plex Sans Condensed","Helvetica Neue",Arial,sans-serif;
+    font-weight:700;font-size:clamp(38px,6.4vw,66px);line-height:1.02;
+    letter-spacing:-.015em;margin:0;text-wrap:balance;
+  }
+  .standfirst{
+    margin:0;max-width:62ch;font-size:19px;color:var(--ink-2);
+  }
+  .skim{
+    display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+    font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12.5px;
+  }
+  .skim .skim-label{color:var(--muted);letter-spacing:.08em;text-transform:uppercase;}
+  .skim a{
+    display:inline-block;padding:4px 10px;border:1px solid var(--rule-strong);
+    border-radius:2px;color:var(--ink);text-decoration:none;background:var(--surface);
+  }
+  .skim a:hover{border-color:var(--accent);color:var(--accent-ink);}
+
+  /* ---------- layout ---------- */
+  .layout{display:grid;grid-template-columns:206px minmax(0,1fr);gap:56px;align-items:start;}
+  nav.rail{
+    position:sticky;top:24px;padding-top:40px;
+    font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12.5px;line-height:1.35;
+    max-height:calc(100vh - 48px);overflow-y:auto;
+  }
+  nav.rail ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px;}
+  nav.rail a{
+    display:grid;grid-template-columns:22px 1fr;gap:8px;
+    padding:5px 8px 5px 0;color:var(--muted);text-decoration:none;
+    border-left:2px solid transparent;padding-left:10px;
+  }
+  nav.rail a .n{color:var(--rule-strong);font-variant-numeric:tabular-nums;}
+  nav.rail a:hover{color:var(--ink);}
+  nav.rail a.on{color:var(--accent-ink);border-left-color:var(--accent);}
+  nav.rail a.on .n{color:var(--accent);}
+
+  main{padding-top:40px;min-width:0;}
+  section{scroll-margin-top:24px;padding-bottom:52px;}
+  h2{
+    font-family:"IBM Plex Sans Condensed","Helvetica Neue",Arial,sans-serif;
+    font-weight:700;font-size:30px;line-height:1.12;letter-spacing:-.01em;
+    margin:0 0 4px;text-wrap:balance;
+  }
+  h2 .num{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:13px;font-weight:500;
+    color:var(--accent);display:block;letter-spacing:.1em;margin-bottom:6px;
+  }
+  h3{
+    font-family:"IBM Plex Sans Condensed","Helvetica Neue",Arial,sans-serif;
+    font-weight:600;font-size:19px;letter-spacing:.005em;margin:30px 0 8px;color:var(--ink);
+  }
+  p,ul,ol{max-width:70ch;}
+  p{margin:0 0 14px;}
+  ul,ol{margin:0 0 16px;padding-left:22px;}
+  li{margin-bottom:7px;}
+  li::marker{color:var(--rule-strong);}
+  strong{font-weight:600;}
+  em{font-style:italic;color:var(--ink-2);}
+  a{color:var(--accent-ink);}
+  hr{border:0;border-top:1px solid var(--rule);margin:0 0 40px;}
+
+  code{
+    font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+    font-size:.855em;background:var(--surface-2);border-radius:2px;padding:1px 5px;
+    color:var(--ink);white-space:nowrap;
+  }
+  pre{
+    background:var(--code-bg);color:var(--code-ink);
+    font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+    font-size:13px;line-height:1.62;
+    margin:0 0 18px;padding:18px 20px;border-radius:3px;
+    overflow-x:auto;border-left:3px solid var(--accent);
+  }
+  pre code{background:none;padding:0;color:inherit;font-size:inherit;white-space:pre;}
+  pre .c{color:var(--code-dim);}
+
+  .tablewrap{overflow-x:auto;margin:0 0 20px;border:1px solid var(--rule);border-radius:3px;background:var(--surface);}
+  table{border-collapse:collapse;width:100%;font-size:15px;line-height:1.5;}
+  th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--rule);vertical-align:top;}
+  thead th{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11.5px;font-weight:500;
+    text-transform:uppercase;letter-spacing:.1em;color:var(--muted);
+    background:var(--surface-2);border-bottom:1px solid var(--rule-strong);white-space:nowrap;
+  }
+  tbody tr:last-child td{border-bottom:0;}
+  td code{white-space:normal;}
+  .code-col{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:13px;font-variant-numeric:tabular-nums;white-space:nowrap;}
+
+  .trap{
+    background:var(--signal-soft);border-left:3px solid var(--signal);
+    padding:14px 18px;margin:0 0 18px;border-radius:0 3px 3px 0;max-width:70ch;
+  }
+  .trap p{margin:0;}
+  .trap .tag{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--signal);display:block;margin-bottom:4px;font-weight:500;
+  }
+  .keynote{
+    background:var(--accent-soft);border-left:3px solid var(--accent);
+    padding:14px 18px;margin:0 0 18px;border-radius:0 3px 3px 0;max-width:70ch;
+  }
+  .keynote p{margin:0;}
+
+  /* ---------- Q&A ---------- */
+  .qgroup{margin-bottom:26px;}
+  .qgroup > h3{margin-top:22px;}
+  details.q{
+    border:1px solid var(--rule);border-radius:3px;background:var(--surface);
+    margin-bottom:6px;box-shadow:var(--shadow);max-width:74ch;
+  }
+  details.q summary{
+    cursor:pointer;padding:11px 16px;list-style:none;
+    font-family:"IBM Plex Sans Condensed","Helvetica Neue",Arial,sans-serif;
+    font-weight:600;font-size:16.5px;display:flex;gap:10px;align-items:baseline;
+  }
+  details.q summary::-webkit-details-marker{display:none;}
+  details.q summary::before{
+    content:"+";font-family:"IBM Plex Mono",monospace;color:var(--accent);
+    font-weight:500;font-size:14px;flex:none;
+  }
+  details.q[open] summary::before{content:"\2212";}
+  details.q[open] summary{border-bottom:1px solid var(--rule);}
+  details.q .a{padding:12px 16px 14px 32px;font-size:16px;color:var(--ink-2);}
+  details.q .a p{margin:0;max-width:64ch;}
+  summary:focus-visible,a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+  .qtools{display:flex;gap:8px;margin:0 0 16px;}
+  .qtools button{
+    font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12px;letter-spacing:.06em;
+    text-transform:uppercase;padding:6px 12px;border:1px solid var(--rule-strong);
+    background:var(--surface);color:var(--ink);border-radius:2px;cursor:pointer;
+  }
+  .qtools button:hover{border-color:var(--accent);color:var(--accent-ink);}
+
+  ol.gotchas{counter-reset:g;list-style:none;padding-left:0;max-width:70ch;}
+  ol.gotchas li{
+    counter-increment:g;position:relative;padding-left:34px;margin-bottom:9px;
+  }
+  ol.gotchas li::before{
+    content:counter(g,decimal-leading-zero);position:absolute;left:0;top:2px;
+    font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--signal);
+    font-variant-numeric:tabular-nums;
+  }
+
+  footer.sources{
+    border-top:1px solid var(--rule);padding-top:24px;margin-top:12px;
+    font-size:15px;color:var(--muted);max-width:74ch;
+  }
+  footer.sources h2{font-size:20px;margin-bottom:10px;}
+  footer.sources ul{padding-left:18px;}
+
+  @media (max-width:900px){
+    .layout{grid-template-columns:1fr;gap:0;}
+    nav.rail{position:static;max-height:none;padding-top:28px;border-bottom:1px solid var(--rule);padding-bottom:20px;}
+    nav.rail ol{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:2px 12px;}
+    .wrap{padding:0 18px 72px;}
+    body{font-size:16.5px;}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">Revision note · Docker for Java / Spring Boot</p>
+    <h1>Docker, before the interview</h1>
+    <p class="standfirst">The things you are most likely to be asked, in the order that is worth revising. Docker basics first, then the Spring Boot part — that is what separates you from someone who only read the docs.</p>
+    <div class="skim">
+      <span class="skim-label">Short on time</span>
+      <a href="#s1">1 · Basics</a>
+      <a href="#s5">5 · Dockerfile</a>
+      <a href="#s7">7 · Spring Boot</a>
+      <a href="#s11">11 · Debugging</a>
+      <a href="#s16">16 · Q&amp;A</a>
+    </div>
+  </header>
+
+  <div class="layout">
+    <nav class="rail" aria-label="Sections">
+      <ol>
+        <li><a href="#s1"><span class="n">01</span><span>The basic idea</span></a></li>
+        <li><a href="#s2"><span class="n">02</span><span>How it fits</span></a></li>
+        <li><a href="#s3"><span class="n">03</span><span>Lifecycle</span></a></li>
+        <li><a href="#s4"><span class="n">04</span><span>Commands &amp; setup</span></a></li>
+        <li><a href="#s5"><span class="n">05</span><span>Dockerfile</span></a></li>
+        <li><a href="#s6"><span class="n">06</span><span>Images &amp; tags</span></a></li>
+        <li><a href="#s7"><span class="n">07</span><span>Spring Boot</span></a></li>
+        <li><a href="#s8"><span class="n">08</span><span>Storage</span></a></li>
+        <li><a href="#s9"><span class="n">09</span><span>Networking</span></a></li>
+        <li><a href="#s10"><span class="n">10</span><span>Compose</span></a></li>
+        <li><a href="#s11"><span class="n">11</span><span>Exit codes</span></a></li>
+        <li><a href="#s12"><span class="n">12</span><span>Security</span></a></li>
+        <li><a href="#s13"><span class="n">13</span><span>CI/CD</span></a></li>
+        <li><a href="#s14"><span class="n">14</span><span>vs Kubernetes</span></a></li>
+        <li><a href="#s15"><span class="n">15</span><span>Mistakes</span></a></li>
+        <li><a href="#s16"><span class="n">16</span><span>Q&amp;A practice</span></a></li>
+        <li><a href="#s17"><span class="n">17</span><span>Debugging</span></a></li>
+        <li><a href="#s18"><span class="n">18</span><span>Practice tasks</span></a></li>
+      </ol>
+    </nav>
+
+    <main>
+
+      <section id="s1">
+        <h2><span class="num">01</span>The basic idea</h2>
+        <p><strong>Why Docker exists:</strong> to stop "it works on my machine". Your JAR needs a certain JDK, some OS libraries, env vars, and a database on some port. Docker puts the app <em>and</em> everything it needs into one package that runs the same on your Mac, in CI, and in prod.</p>
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>Word</th><th>What it means</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Image</strong></td><td>A read-only template: layers plus settings (env, entrypoint, ports). Like a <em>class</em>.</td></tr>
+              <tr><td><strong>Container</strong></td><td>A running copy of an image = image layers + one thin <strong>writable layer</strong> + an isolated process. Like an <em>object</em>.</td></tr>
+              <tr><td><strong>Dockerfile</strong></td><td>The recipe used to build an image. Each line ≈ one layer.</td></tr>
+              <tr><td><strong>Registry</strong></td><td>Where images are stored — Docker Hub, ECR, GCR, Nexus, Harbor.</td></tr>
+              <tr><td><strong>Volume</strong></td><td>Storage managed by Docker that stays alive after the container is gone.</td></tr>
+              <tr><td><strong>Compose</strong></td><td>A YAML file to run many containers together (app + MySQL + Redis) with one command.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>Container vs VM — asked in almost every interview</h3>
+        <ul>
+          <li>A <strong>VM</strong> has <strong>its own kernel</strong> and a full OS. Size in GB, boots in minutes, very strong isolation.</li>
+          <li>A <strong>container shares the host kernel</strong>. It is isolated using Linux <strong>namespaces</strong> (pid, net, mnt, uts, ipc, user), <strong>cgroups</strong> (CPU and memory limits), and a <strong>union filesystem</strong> (overlay2).</li>
+          <li>Size in MB, starts in milliseconds, weaker isolation — all containers share one kernel.</li>
+          <li>On Mac and Windows there <em>is</em> a small Linux VM underneath, because containers are a Linux feature.</li>
+        </ul>
+      </section>
+
+      <hr>
+
+      <section id="s2">
+        <h2><span class="num">02</span>How the pieces fit</h2>
+<pre><code>docker CLI  --REST API-->  dockerd  -->  containerd  -->  runc  -->  your process
+                              |
+                              +--> registry (pull / push)</code></pre>
+        <ul>
+          <li><strong>dockerd</strong> — the daemon. Builds images and manages containers, networks and volumes. Runs as root by default, which is why <em>rootless mode</em> exists.</li>
+          <li><strong>containerd</strong> — manages the container lifecycle. Kubernetes talks to this directly.</li>
+          <li><strong>runc</strong> — creates the namespaces and cgroups and starts the process.</li>
+          <li><strong>OCI</strong> — the common standard for image format and runtime. This is why Kubernetes can run Docker-built images without Docker.</li>
+          <li><strong>BuildKit</strong> — the new build engine, now the default. Parallel stages, cache mounts, secret mounts.</li>
+        </ul>
+      </section>
+
+      <hr>
+
+      <section id="s3">
+        <h2><span class="num">03</span>Container lifecycle</h2>
+        <p><code>created → running → paused → stopped (exited) → removed</code></p>
+        <ul>
+          <li><code>docker run</code> = pull the image if it is missing, create the container (writable layer and network), then start it. Your process becomes <strong>PID 1</strong>.</li>
+          <li>A container runs only as long as its <strong>PID 1 process</strong> runs. When the process ends, the container ends. There is no "background".</li>
+          <li><code>docker stop</code> sends <strong>SIGTERM</strong>, waits <strong>10 seconds</strong> (<code>-t</code>), then sends SIGKILL. <code>docker kill</code> sends SIGKILL right away.</li>
+        </ul>
+      </section>
+
+      <hr>
+
+      <section id="s4">
+        <h2><span class="num">04</span>Commands, one by one</h2>
+
+        <h3>4.1 Images</h3>
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td class="code-col">docker build -t myapp:1.0 .</td><td>Builds an image using the Dockerfile in the current folder (<code>.</code>). <code>-t</code> gives it a name and tag.</td></tr>
+              <tr><td class="code-col">docker images</td><td>Lists the images on your machine, with their size.</td></tr>
+              <tr><td class="code-col">docker pull postgres:16</td><td>Downloads an image from the registry without running it.</td></tr>
+              <tr><td class="code-col">docker history myapp:1.0</td><td>Shows every layer of the image and its size. Use it to find the big one.</td></tr>
+              <tr><td class="code-col">docker tag myapp:1.0 myrepo/myapp:1.0</td><td>Gives the same image a second name, usually the registry name, before pushing.</td></tr>
+              <tr><td class="code-col">docker push myrepo/myapp:1.0</td><td>Uploads the image to the registry.</td></tr>
+              <tr><td class="code-col">docker rmi myapp:1.0</td><td>Deletes an image from your machine.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>4.2 Containers</h3>
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td class="code-col">docker run -d --name app -p 8080:8080 myapp:1.0</td><td>Creates and starts a container. <code>-d</code> runs it in the background, <code>--name</code> gives it a name, <code>-p host:container</code> opens the port.</td></tr>
+              <tr><td class="code-col">docker run -e KEY=value …</td><td>Passes an environment variable into the container.</td></tr>
+              <tr><td class="code-col">docker ps</td><td>Lists <strong>running</strong> containers.</td></tr>
+              <tr><td class="code-col">docker ps -a</td><td>Lists <strong>all</strong> containers, including stopped ones and their exit code.</td></tr>
+              <tr><td class="code-col">docker logs app</td><td>Prints what the app wrote to the console.</td></tr>
+              <tr><td class="code-col">docker logs -f --tail 100 app</td><td>Shows the last 100 lines and keeps following new ones, like <code>tail -f</code>.</td></tr>
+              <tr><td class="code-col">docker exec -it app sh</td><td>Opens a shell <strong>inside</strong> a running container — the normal way to look around. <code>-it</code> means interactive terminal.</td></tr>
+              <tr><td class="code-col">docker inspect app</td><td>Prints every detail as JSON: env vars, mounts, network, exit code, and whether it was OOM-killed.</td></tr>
+              <tr><td class="code-col">docker stop app</td><td>Stops it politely — SIGTERM, then waits 10 seconds.</td></tr>
+              <tr><td class="code-col">docker start app</td><td>Starts a stopped container again.</td></tr>
+              <tr><td class="code-col">docker restart app</td><td>Stop and start in one command.</td></tr>
+              <tr><td class="code-col">docker rm app</td><td>Deletes a stopped container. <code>docker rm -f app</code> forces it while it is running.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>4.3 Volumes (storage)</h3>
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td class="code-col">docker volume create pgdata</td><td>Creates a named volume — a folder managed by Docker.</td></tr>
+              <tr><td class="code-col">docker volume ls</td><td>Lists volumes.</td></tr>
+              <tr><td class="code-col">docker volume inspect pgdata</td><td>Shows where it is stored and which containers use it.</td></tr>
+              <tr><td class="code-col">docker volume rm pgdata</td><td>Deletes the volume <strong>and the data inside it</strong>.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>4.4 Networks</h3>
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td class="code-col">docker network create app-net</td><td>Creates a user-defined network. Containers on it find each other <strong>by name</strong>.</td></tr>
+              <tr><td class="code-col">docker network ls</td><td>Lists networks.</td></tr>
+              <tr><td class="code-col">docker network inspect app-net</td><td>Shows which containers are connected, and their IPs.</td></tr>
+              <tr><td class="code-col">docker network connect app-net app</td><td>Adds an already-running container to a network.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>4.5 Compose</h3>
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td class="code-col">docker compose up -d</td><td>Starts everything in <code>compose.yaml</code> in the background.</td></tr>
+              <tr><td class="code-col">docker compose up -d --build</td><td>Same, but rebuilds the images first.</td></tr>
+              <tr><td class="code-col">docker compose ps</td><td>Shows the services and their state.</td></tr>
+              <tr><td class="code-col">docker compose logs -f app</td><td>Follows the logs of one service.</td></tr>
+              <tr><td class="code-col">docker compose down</td><td>Stops and removes the containers and the network. Volumes stay.</td></tr>
+              <tr><td class="code-col">docker compose down -v</td><td>Same, but <strong>also deletes the named volumes</strong> — your DB data is gone.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>4.6 Cleanup</h3>
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td class="code-col">docker image prune</td><td>Removes dangling (untagged) images.</td></tr>
+              <tr><td class="code-col">docker container prune</td><td>Removes all stopped containers.</td></tr>
+              <tr><td class="code-col">docker system df</td><td>Shows how much disk images, containers and volumes are using.</td></tr>
+              <tr><td class="code-col">docker system prune -a</td><td>Removes everything unused. Be careful with this one.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>4.7 Step by step: an app, a database, a network and a volume</h3>
+
+        <p><strong>Step 1 — build your image.</strong></p>
+<pre><code>cd my-spring-boot-app        <span class="c"># the folder with the Dockerfile</span>
+docker build -t myapp:1.0 .
+docker images                <span class="c"># you should see myapp:1.0</span></code></pre>
+
+        <p><strong>Step 2 — create a network</strong>, so the app and the database can find each other by name.</p>
+<pre><code>docker network create app-net</code></pre>
+
+        <p><strong>Step 3 — create a volume</strong>, so the database data survives when the container is deleted.</p>
+<pre><code>docker volume create pgdata</code></pre>
+
+        <p><strong>Step 4 — start Postgres</strong> on that network, using that volume.</p>
+<pre><code>docker run -d --name postgres \
+  --network app-net \
+  -e POSTGRES_USER=appuser \
+  -e POSTGRES_PASSWORD=secret \
+  -e POSTGRES_DB=appdb \
+  -v pgdata:/var/lib/postgresql/data \
+  -p 5432:5432 \
+  postgres:16</code></pre>
+        <ul>
+          <li><code>-v pgdata:/var/lib/postgresql/data</code> — Postgres keeps its files in that path, so the volume is pointed there.</li>
+          <li><code>-p 5432:5432</code> — only needed if you also want to connect from your Mac (DBeaver, IntelliJ). Containers on <code>app-net</code> do not need it.</li>
+        </ul>
+
+        <p><strong>Step 5 — check it is ready.</strong></p>
+<pre><code>docker ps                                   <span class="c"># is it running?</span>
+docker logs postgres                        <span class="c"># look for "database system is ready"</span>
+docker exec -it postgres pg_isready -U appuser</code></pre>
+
+        <p><strong>Step 6 — start your app on the same network.</strong></p>
+<pre><code>docker run -d --name app \
+  --network app-net \
+  -p 8080:8080 \
+  -e SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/appdb \
+  -e SPRING_DATASOURCE_USERNAME=appuser \
+  -e SPRING_DATASOURCE_PASSWORD=secret \
+  myapp:1.0
+
+docker logs -f app</code></pre>
+        <div class="keynote"><p>The URL uses <code>postgres</code> — the <strong>container name</strong> — and port <strong>5432</strong>, the port <em>inside</em> the network. Not <code>localhost</code>.</p></div>
+
+        <p><strong>Step 7 — prove the volume works.</strong></p>
+<pre><code>docker rm -f postgres        <span class="c"># delete the database container</span>
+docker run -d --name postgres --network app-net \
+  -e POSTGRES_USER=appuser -e POSTGRES_PASSWORD=secret -e POSTGRES_DB=appdb \
+  -v pgdata:/var/lib/postgresql/data postgres:16</code></pre>
+        <p>Your tables and rows are still there, because they live in the volume, not in the container.</p>
+
+        <p><strong>Step 8 — clean up when you are done.</strong></p>
+<pre><code>docker rm -f app postgres
+docker network rm app-net
+docker volume rm pgdata      <span class="c"># this deletes the data</span></code></pre>
+
+        <h3>4.8 Looking inside Postgres</h3>
+        <p>Open a psql session inside the container:</p>
+<pre><code>docker exec -it postgres psql -U appuser -d appdb</code></pre>
+        <p>Then use these. psql commands start with a backslash; SQL ends with a semicolon.</p>
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td class="code-col">\l</td><td>List all databases</td></tr>
+              <tr><td class="code-col">\c appdb</td><td>Switch to the <code>appdb</code> database</td></tr>
+              <tr><td class="code-col">\dt</td><td><strong>List the tables</strong></td></tr>
+              <tr><td class="code-col">\d users</td><td>Show the columns, types and indexes of the <code>users</code> table</td></tr>
+              <tr><td class="code-col">\dn</td><td>List schemas</td></tr>
+              <tr><td class="code-col">\du</td><td>List users and roles</td></tr>
+              <tr><td class="code-col">SELECT * FROM users LIMIT 10;</td><td>Read some rows</td></tr>
+              <tr><td class="code-col">SELECT count(*) FROM users;</td><td>Count the rows</td></tr>
+              <tr><td class="code-col">\x</td><td>Toggle wide output — helpful when a row has many columns</td></tr>
+              <tr><td class="code-col">\q</td><td>Quit</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Run one command without opening a session:</p>
+<pre><code>docker exec -it postgres psql -U appuser -d appdb -c "\dt"
+docker exec -it postgres psql -U appuser -d appdb -c "SELECT * FROM users LIMIT 5;"</code></pre>
+        <p>If you get "Did not find any relations", you are usually in the wrong database or the wrong schema. Check with <code>\c appdb</code> and then <code>\dt public.*</code>.</p>
+
+        <h3>4.9 The same thing in MySQL</h3>
+<pre><code>docker run -d --name mysql --network app-net \
+  -e MYSQL_ROOT_PASSWORD=secret -e MYSQL_DATABASE=appdb \
+  -v mysqldata:/var/lib/mysql -p 3306:3306 mysql:8
+
+docker exec -it mysql mysql -uroot -psecret appdb</code></pre>
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td class="code-col">SHOW DATABASES;</td><td>List databases</td></tr>
+              <tr><td class="code-col">USE appdb;</td><td>Switch database</td></tr>
+              <tr><td class="code-col">SHOW TABLES;</td><td><strong>List the tables</strong></td></tr>
+              <tr><td class="code-col">DESCRIBE users;</td><td>Show the columns of a table</td></tr>
+              <tr><td class="code-col">SELECT * FROM users LIMIT 10;</td><td>Read some rows</td></tr>
+              <tr><td class="code-col">exit</td><td>Quit</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="trap"><span class="tag">Note</span><p>Typing passwords on the command line is fine for local practice, but not for real environments — see section 12.</p></div>
+      </section>
+
+      <hr>
+
+      <section id="s5">
+        <h2><span class="num">05</span>Dockerfile — the rules that matter</h2>
+<pre><code>FROM eclipse-temurin:21-jre-alpine
+WORKDIR /app
+ARG JAR_FILE=target/*.jar           <span class="c"># build time only</span>
+ENV SPRING_PROFILES_ACTIVE=prod     <span class="c"># saved inside the image -> no secrets here!</span>
+COPY ${JAR_FILE} app.jar
+RUN addgroup -S app &amp;&amp; adduser -S app -G app
+USER app                            <span class="c"># stop running as root</span>
+EXPOSE 8080                         <span class="c"># only documentation</span>
+HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
+  CMD wget -qO- http://localhost:8080/actuator/health || exit 1
+ENTRYPOINT ["java","-jar","/app/app.jar"]
+CMD ["--server.port=8080"]          <span class="c"># default arguments, can be replaced</span></code></pre>
+        <h3>Differences you will be asked about</h3>
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>Pair</th><th>Answer</th></tr></thead>
+            <tbody>
+              <tr><td class="code-col">RUN / CMD / ENTRYPOINT</td><td>RUN runs while building and makes a layer. ENTRYPOINT is the command that runs. CMD gives default arguments — anything you type after <code>docker run</code> replaces them.</td></tr>
+              <tr><td class="code-col">exec vs shell form</td><td><strong>Exec form</strong> <code>["java","-jar","x.jar"]</code>: java is PID 1 and gets SIGTERM, so shutdown is clean. <strong>Shell form</strong> <code>java -jar x.jar</code> runs inside <code>/bin/sh -c</code>, so <code>sh</code> is PID 1 and eats the signal — <code>docker stop</code> then waits 10s and kills it. Always use exec form for Spring Boot.</td></tr>
+              <tr><td class="code-col">COPY vs ADD</td><td>COPY only copies files. ADD can also download URLs and unpack tar files. Use COPY — it is simpler and predictable.</td></tr>
+              <tr><td class="code-col">EXPOSE vs -p</td><td>EXPOSE is just information. <code>-p host:container</code> is what really opens the port. <code>-P</code> opens all EXPOSEd ports on random host ports.</td></tr>
+              <tr><td class="code-col">ARG vs ENV</td><td>ARG works only during the build (<code>--build-arg</code>). ENV stays in the image and can be seen with <code>docker inspect</code> and image history — so keep secrets out of both.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>Layer cache — the most common build question</h3>
+        <ul>
+          <li>Every line makes a layer. Docker caches it using the line plus a hash of the files it copies.</li>
+          <li>If one layer changes, <strong>every layer after it is rebuilt</strong>.</li>
+          <li>So put the things that rarely change first: copy <code>pom.xml</code>, run <code>mvn dependency:go-offline</code>, and copy <code>src/</code> <strong>after</strong> that. Otherwise every code change downloads all dependencies again.</li>
+          <li><code>.dockerignore</code> makes the <strong>build context</strong> smaller — Docker sends everything in <code>.</code> to the daemon. Ignore <code>.git</code>, IDE files, <code>node_modules</code>.</li>
+        </ul>
+        <div class="trap">
+          <span class="tag">Trap</span>
+          <p>Deleting a file in a later layer does <strong>not</strong> make the image smaller — the file is still inside the earlier layer and can be pulled out. Install and clean up in the <strong>same</strong> <code>RUN</code>. Also, if your Dockerfile does <code>COPY target/*.jar</code>, don't put <code>target/</code> in <code>.dockerignore</code>.</p>
+        </div>
+      </section>
+
+      <hr>
+
+      <section id="s6">
+        <h2><span class="num">06</span>Images: size, tags, cleanup</h2>
+        <ul>
+          <li><strong>Multi-stage build</strong> — use the full JDK and Maven in stage 1, then <code>COPY --from=builder</code> only the JAR into a small JRE stage. Build tools, source code and the Maven cache never reach the final image. A Spring Boot image usually drops from about 800 MB to about 200 MB on a JRE base, and under 100 MB with alpine or jlink.</li>
+          <li><strong>Base image options:</strong> <code>21-jdk</code> (big) → <code>21-jre</code> → <code>21-jre-alpine</code> (uses musl libc, so watch out for native libraries and DNS issues) → distroless (no shell, smallest attack surface, hardest to debug).</li>
+          <li><strong>Tags can move; digests cannot.</strong> <code>latest</code> is only a default tag name, not "the newest". It makes builds hard to repeat and rollbacks hard. In prod use <code>myapp:1.4.2</code> or <code>myapp@sha256:…</code>.</li>
+          <li>A <strong>dangling image</strong> is the old untagged layer set left behind when you rebuild the same tag (<code>&lt;none&gt;:&lt;none&gt;</code>). Clean it with <code>docker image prune</code>.</li>
+        </ul>
+      </section>
+
+      <hr>
+
+      <section id="s7">
+        <h2><span class="num">07</span>Spring Boot + Docker</h2>
+        <div class="keynote"><p>Most of your questions will be here. Learn to explain the whole story: fat jar → layered jar → multi-stage build → buildpacks → JVM memory.</p></div>
+
+        <h3>7.1 The problem with the fat JAR</h3>
+        <p>A Spring Boot uber-jar is about 50 MB, and about 48 MB of it is dependencies that almost never change. <code>COPY app.jar</code> makes <strong>one huge layer</strong>, so even a one-line code change pushes and pulls the full 50 MB.</p>
+
+        <h3>7.2 Layered JARs (Spring Boot 2.3+)</h3>
+        <p>Spring Boot writes a <code>layers.idx</code> file that splits the JAR into 4 layers, from "rarely changes" to "changes every time":</p>
+        <ol>
+          <li><code>dependencies</code></li>
+          <li><code>spring-boot-loader</code></li>
+          <li><code>snapshot-dependencies</code></li>
+          <li><code>application</code> — your code and resources, the only one that changes in a normal deploy</li>
+        </ol>
+        <p>So a redeploy sends <strong>KB instead of MB</strong>, and image pulls become very fast.</p>
+<pre><code>java -Djarmode=tools -jar app.jar list-layers      <span class="c"># Boot 3.3+</span>
+java -Djarmode=layertools -jar app.jar list        <span class="c"># Boot 2.3 – 3.2</span></code></pre>
+
+        <h3>7.3 The Dockerfile you should be able to write from memory</h3>
+<pre><code><span class="c"># ---------- stage 1: build ----------</span>
+FROM maven:3.9-eclipse-temurin-21 AS build
+WORKDIR /src
+COPY pom.xml .
+RUN mvn -B dependency:go-offline        <span class="c"># cached until pom.xml changes</span>
+COPY src ./src
+RUN mvn -B clean package -DskipTests
+
+<span class="c"># ---------- stage 2: split into layers ----------</span>
+FROM eclipse-temurin:21-jre AS extractor
+WORKDIR /app
+COPY --from=build /src/target/*.jar app.jar
+RUN java -Djarmode=tools -jar app.jar extract --layers --destination extracted
+<span class="c"># Boot 2.3–3.2:  java -Djarmode=layertools -jar app.jar extract</span>
+
+<span class="c"># ---------- stage 3: run ----------</span>
+FROM eclipse-temurin:21-jre
+WORKDIR /app
+RUN useradd -r -u 1001 spring
+COPY --from=extractor /app/extracted/dependencies/ ./
+COPY --from=extractor /app/extracted/spring-boot-loader/ ./
+COPY --from=extractor /app/extracted/snapshot-dependencies/ ./
+COPY --from=extractor /app/extracted/application/ ./
+USER 1001
+EXPOSE 8080
+ENTRYPOINT ["java","-XX:MaxRAMPercentage=75.0","-jar","application.jar"]</code></pre>
+        <p>The <code>application.jar</code> in the last stage is the small launcher created by the extract step, not the uber-jar. To make the Maven step faster without adding a layer, use a BuildKit cache mount:</p>
+<pre><code>RUN --mount=type=cache,target=/root/.m2 mvn -B clean package -DskipTests</code></pre>
+
+        <h3>7.4 Buildpacks — no Dockerfile at all</h3>
+<pre><code>mvn spring-boot:build-image -Dspring-boot.build-image.imageName=myorg/myapp:1.0
+./gradlew bootBuildImage</code></pre>
+        <p>This uses <strong>Cloud Native Buildpacks (Paketo)</strong> and needs Docker running. You get a good JRE, layers, container-aware JVM memory settings and a non-root user for free. <strong>Use it when</strong> you don't want to maintain Dockerfiles across many services. <strong>Use a Dockerfile when</strong> you need extra OS packages, a company base image, or full control.</p>
+
+        <h3>7.5 The JVM inside a container</h3>
+        <ul>
+          <li>Since <strong>JDK 10</strong>, <code>-XX:+UseContainerSupport</code> is on by default, so the JVM reads the <em>container</em> limits, not the host's. On Java 8 before 8u191 the JVM saw the <strong>host's</strong> RAM and CPU and got killed — the classic story.</li>
+          <li>By default max heap is only <strong>25%</strong> of container memory (<code>MaxRAMPercentage</code>). Set <code>-XX:MaxRAMPercentage=75.0</code> instead of a fixed <code>-Xmx</code> that ignores the limit.</li>
+          <li><strong>Heap is not the same as container memory.</strong> Metaspace, thread stacks, code cache, direct/NIO buffers and GC data sit outside the heap. Give the container about heap + 25–35%.</li>
+          <li><code>-XX:ActiveProcessorCount</code> matters when CPU limits are fractional — it decides GC threads, <code>ForkJoinPool.commonPool</code>, and Tomcat/Netty defaults.</li>
+          <li>Tools: <code>docker stats</code>, <code>jcmd &lt;pid&gt; VM.native_memory</code>, Actuator <code>/actuator/metrics/jvm.memory.used</code>.</li>
+        </ul>
+        <div class="trap"><span class="tag">Trap</span><p>Getting this wrong is the usual reason for <strong>exit code 137</strong>. If someone asks "why does my pod keep restarting under load?", this is the answer they want.</p></div>
+
+        <h3>7.6 Config and profiles</h3>
+        <ul>
+          <li>Spring converts env vars to properties: <code>SPRING_DATASOURCE_URL</code> → <code>spring.datasource.url</code>, <code>SPRING_PROFILES_ACTIVE=prod</code>.</li>
+          <li>Order, highest first: command-line args → env vars / <code>SPRING_APPLICATION_JSON</code> → <code>application-prod.yml</code> → <code>application.yml</code>.</li>
+          <li>Never put prod passwords in the image — <code>ENV</code> and <code>ARG</code> can be read with <code>docker history</code>. Pass them at runtime with <code>-e</code>, <code>--env-file</code>, Docker or Kubernetes secrets, Vault, or AWS Secrets Manager.</li>
+          <li>The <strong>same image</strong> should move from dev to stage to prod. Only the env vars change.</li>
+        </ul>
+
+        <h3>7.7 Graceful shutdown</h3>
+<pre><code>server.shutdown=graceful
+spring.lifecycle.timeout-per-shutdown-phase=30s</code></pre>
+        <p>And use the exec-form ENTRYPOINT so the JVM is PID 1 and really gets SIGTERM. If you start child processes, run with <code>--init</code> so signals are passed on and zombie processes are cleaned up.</p>
+
+        <h3>7.8 Health checks</h3>
+<pre><code>management.endpoint.health.probes.enabled=true   <span class="c"># /actuator/health/liveness &amp; /readiness</span>
+management.endpoints.web.exposure.include=health,info,metrics,prometheus</code></pre>
+        <div class="trap">
+          <span class="tag">Trap</span>
+          <p>A Docker <strong>restart policy does not look at the healthcheck</strong>. An unhealthy container keeps running; only the process exiting causes a restart. Kubernetes <em>does</em> restart on a failed liveness probe, and Swarm reschedules. Also <code>curl</code> is often missing in slim images — use <code>wget -qO-</code>.</p>
+        </div>
+
+        <h3>7.9 Nice things to mention</h3>
+        <ul>
+          <li><strong><code>spring-boot-docker-compose</code></strong> (Boot 3.1+) — during development the app starts your <code>compose.yaml</code> itself and connects the datasource with <code>@ServiceConnection</code>.</li>
+          <li><strong>Testcontainers</strong> — start a real MySQL or Kafka in JUnit, and <code>@ServiceConnection</code> fills in the properties. Use this to answer "how do you test against a real database in CI?"</li>
+        </ul>
+      </section>
+
+      <hr>
+
+      <section id="s8">
+        <h2><span class="num">08</span>Data and storage</h2>
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>Type</th><th>What it is</th><th>Use it for</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Named volume</strong></td><td>A folder managed by Docker; survives <code>docker rm</code></td><td>DB data, uploads, anything in prod</td></tr>
+              <tr><td><strong>Bind mount</strong></td><td>A specific folder on your host</td><td>Dev hot-reload, config files, certs, logs</td></tr>
+              <tr><td><strong>tmpfs</strong></td><td>Only in RAM, gone on stop</td><td>Temporary data or secrets that must not touch disk</td></tr>
+              <tr><td><strong>Writable layer</strong></td><td>The default; deleted with the container</td><td>Nothing important</td></tr>
+            </tbody>
+          </table>
+        </div>
+<pre><code>docker run -v pgdata:/var/lib/postgresql/data postgres:16   <span class="c"># named volume</span>
+docker run -v "$PWD/config":/app/config:ro myapp            <span class="c"># bind mount, read-only</span></code></pre>
+        <ul>
+          <li><strong>Copy-on-write:</strong> reads come from the image layer, but the first write copies the file into the container layer. So writing a lot to the container filesystem is slow <em>and</em> the data is lost later.</li>
+          <li>Containers should be <strong>stateless</strong>. Keep state in a volume or an external service. That is what makes them easy to replace and scale.</li>
+          <li>To share data between containers, mount the same named volume — or better, talk over the network.</li>
+        </ul>
+      </section>
+
+      <hr>
+
+      <section id="s9">
+        <h2><span class="num">09</span>Networking</h2>
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>Driver</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td class="code-col">bridge (default)</td><td>Private network on one host. Containers get private IPs, and you need <code>-p</code> to reach them from the host.</td></tr>
+              <tr><td class="code-col">user-defined bridge</td><td>Same, plus <strong>built-in DNS</strong> — containers can reach each other <strong>by name</strong>. Always prefer this.</td></tr>
+              <tr><td class="code-col">host</td><td>No separate network. Uses the host network directly: no <code>-p</code>, fastest, no isolation. Linux only.</td></tr>
+              <tr><td class="code-col">none</td><td>No network.</td></tr>
+              <tr><td class="code-col">overlay</td><td>Across many hosts (Swarm).</td></tr>
+              <tr><td class="code-col">macvlan</td><td>The container gets a real MAC and IP on your physical network.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="trap">
+          <span class="tag">Trap</span>
+          <p>The <strong>default</strong> bridge has <strong>no DNS</strong>. That is the classic "my app cannot find <code>mysql</code>" bug. Compose creates a user-defined network for you, so service names work: <code>jdbc:mysql://mysql:3306/appdb</code>.</p>
+        </div>
+        <ul>
+          <li>Inside the network, use the <strong>container port</strong> (3306), not the published host port.</li>
+          <li><code>localhost</code> inside a container means that container. To reach something on your Mac, use <code>host.docker.internal</code>.</li>
+          <li><code>-p 8080:8081</code> means hostPort:containerPort. If the host port is taken you get "port is already allocated".</li>
+        </ul>
+      </section>
+
+      <hr>
+
+      <section id="s10">
+        <h2><span class="num">10</span>Docker Compose</h2>
+<pre><code>services:
+  mysql:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: appdb
+    volumes: [ mysqldata:/var/lib/mysql ]
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build: .
+    ports: ["8080:8080"]
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/appdb
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+    depends_on:
+      mysql:
+        condition: service_healthy   <span class="c"># waits until HEALTHY, not just "started"</span>
+    restart: unless-stopped
+
+volumes:
+  mysqldata:</code></pre>
+        <ul>
+          <li>Compose runs many containers on <strong>one machine</strong>. A <strong>Dockerfile builds one image</strong>; Compose <strong>runs many containers</strong> and connects them with network, volumes and env vars.</li>
+          <li>Plain <code>depends_on: [mysql]</code> only controls <strong>start order</strong>. It does not wait until MySQL is ready — that is why the app crashes on startup. Fix it with <code>condition: service_healthy</code>, and also add retry in the app, because a good service should not depend on start order.</li>
+          <li>The <code>version:</code> line at the top is no longer used in Compose v2. The command is <code>docker compose</code>; <code>docker-compose</code> v1 is dead.</li>
+          <li>Also worth knowing: <code>--profile debug</code>, <code>up --scale worker=3</code>, an <code>.env</code> file for <code>${VAR}</code>, and <code>docker compose config</code> to see the final file.</li>
+        </ul>
+      </section>
+
+      <hr>
+
+      <section id="s11">
+        <h2><span class="num">11</span>Exit codes and debugging</h2>
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>Code</th><th>Meaning</th></tr></thead>
+            <tbody>
+              <tr><td class="code-col">0</td><td>Exited normally</td></tr>
+              <tr><td class="code-col">1</td><td>Application error or uncaught exception</td></tr>
+              <tr><td class="code-col">125</td><td>The Docker daemon failed — usually a wrong flag</td></tr>
+              <tr><td class="code-col">126</td><td>Command found but not executable</td></tr>
+              <tr><td class="code-col">127</td><td>Command not found — a typo, or no shell in a slim/distroless image</td></tr>
+              <tr><td class="code-col">137</td><td><strong>128+9 SIGKILL</strong> — almost always the OOM killer. Check <code>docker inspect --format '{{.State.OOMKilled}}'</code>. Can also mean a stop that timed out.</td></tr>
+              <tr><td class="code-col">139</td><td>128+11 SIGSEGV — often a native library or the wrong CPU architecture</td></tr>
+              <tr><td class="code-col">143</td><td>128+15 SIGTERM — a normal <code>docker stop</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <ul>
+          <li><strong>Limits:</strong> <code>--memory=1g --memory-swap=1g --cpus=1.5</code>. With no limits, one container can eat the whole host.</li>
+          <li><strong>Restart policies:</strong> <code>no</code> (default), <code>on-failure[:5]</code>, <code>always</code>, <code>unless-stopped</code>. They react to the <em>process exiting</em>, not to "unhealthy".</li>
+          <li><strong><code>exec</code> vs <code>attach</code>:</strong> exec starts a new process, which is safe for debugging. attach connects to PID 1's input and output, where Ctrl-C can kill the container.</li>
+          <li><strong>Logs:</strong> Docker collects stdout and stderr of PID 1, so log to the console and never to a file inside the container. Logging drivers (<code>json-file</code>, <code>local</code>, <code>awslogs</code>, <code>fluentd</code>, <code>gelf</code>) send them somewhere else. Always set <code>max-size</code> and <code>max-file</code> on <code>json-file</code> or the disk fills up.</li>
+        </ul>
+      </section>
+
+      <hr>
+
+      <section id="s12">
+        <h2><span class="num">12</span>Security checklist</h2>
+        <ul>
+          <li>Run as a <strong>non-root</strong> user — use <code>USER</code> or <code>--user 1001</code>. The default is UID 0, which is root.</li>
+          <li>Use a small, pinned base image. Rebuild often for security patches. Scan with <code>docker scout cves</code>, Trivy or Snyk.</li>
+          <li><strong>No secrets in the image</strong> — not in <code>ENV</code>, <code>ARG</code>, or a copied <code>application-prod.yml</code>. They stay in the layers and in <code>docker history</code>. Pass them at runtime, or use a BuildKit <code>--mount=type=secret</code>.</li>
+          <li>Use <code>--read-only</code> for the root filesystem plus a tmpfs for <code>/tmp</code>; <code>--cap-drop ALL --cap-add NET_BIND_SERVICE</code>; <code>--security-opt no-new-privileges</code>.</li>
+          <li>Never mount <code>/var/run/docker.sock</code> into a container you don't trust — that gives root on the host.</li>
+          <li>Use rootless Docker on shared machines. Sign your images and keep internal ones in a private registry.</li>
+        </ul>
+      </section>
+
+      <hr>
+
+      <section id="s13">
+        <h2><span class="num">13</span>CI/CD and registry</h2>
+        <ul>
+          <li>Tag images with the <strong>git SHA</strong> — <code>myapp:1.4.2</code>, <code>myapp:sha-a1b2c3d</code>. Then you know exactly what is running and can roll back. Use <code>latest</code> only as a shortcut.</li>
+          <li>Pipeline: build → unit tests → build image → scan → push to registry → deploy by digest.</li>
+          <li>Speed up CI with <code>--cache-from</code> or the BuildKit registry cache, and cache <code>.m2</code> with a cache mount.</li>
+        </ul>
+        <div class="trap">
+          <span class="tag">Common on Mac</span>
+          <p>An M-series Mac builds <code>linux/arm64</code>, but most servers are <code>linux/amd64</code>, so you get <code>exec format error</code>. Fix it with <code>docker buildx build --platform linux/amd64,linux/arm64 --push</code>.</p>
+        </div>
+      </section>
+
+      <hr>
+
+      <section id="s14">
+        <h2><span class="num">14</span>Docker vs Kubernetes</h2>
+        <p>Docker builds and runs containers on <strong>one machine</strong>. Kubernetes runs them across <strong>many machines</strong>: scheduling, restarting failed pods, scaling, service discovery, rolling deploys, config and secrets. Compose is for development and one host; Kubernetes is for production at scale. Kubernetes removed the Docker runtime shim (dockershim) but still runs Docker-built <strong>OCI</strong> images through containerd. Docker Swarm is Docker's own simpler orchestrator, mostly old now.</p>
+      </section>
+
+      <hr>
+
+      <section id="s15">
+        <h2><span class="num">15</span>Mistakes people make in interviews</h2>
+        <ol class="gotchas">
+          <li>Saying "containers are small VMs" — they are isolated processes sharing the host kernel.</li>
+          <li>Thinking <code>EXPOSE</code> opens a port. It doesn't.</li>
+          <li>Thinking deleting a file in a later layer makes the image smaller.</li>
+          <li>Thinking <code>latest</code> means newest. It is just a tag.</li>
+          <li>Thinking <code>depends_on</code> waits until the DB is ready.</li>
+          <li>Thinking restart policies react to healthchecks.</li>
+          <li>Using shell-form ENTRYPOINT, which breaks SIGTERM and graceful shutdown.</li>
+          <li>Mixing up heap size and container memory — that is exit 137.</li>
+          <li>Forgetting that the default bridge network has no DNS by name.</li>
+          <li>Running <code>docker rm</code> with no volume and losing the database.</li>
+          <li>Putting secrets in <code>ENV</code>, where anyone who pulls the image can read them.</li>
+          <li>Building on Apple Silicon and deploying to amd64 without buildx.</li>
+        </ol>
+      </section>
+
+      <hr>
+
+      <section id="s16">
+        <h2><span class="num">16</span>Quick questions and answers</h2>
+        <p>Try to answer out loud before you open each one.</p>
+        <div class="qtools">
+          <button type="button" data-all="open">Show all</button>
+          <button type="button" data-all="close">Hide all</button>
+        </div>
+
+        <div class="qgroup">
+          <h3>Basics</h3>
+          <details class="q"><summary>What is Docker and why use it?</summary><div class="a"><p>It packages the app with everything it needs into one image, so it behaves the same everywhere, starts fast, and uses fewer resources than VMs.</p></div></details>
+          <details class="q"><summary>Image vs container?</summary><div class="a"><p>A read-only template versus a running copy of it with a writable layer. Class versus object.</p></div></details>
+          <details class="q"><summary>Container vs VM?</summary><div class="a"><p>Shared kernel with namespaces and cgroups versus its own kernel. MB and milliseconds versus GB and minutes. Weaker versus stronger isolation.</p></div></details>
+          <details class="q"><summary>What happens on <code>docker run</code>?</summary><div class="a"><p>Pull the image if it is missing, create the container with a writable layer and network, then start the entrypoint as PID 1.</p></div></details>
+          <details class="q"><summary>Describe Docker's architecture.</summary><div class="a"><p>CLI → dockerd over a REST API → containerd → runc, plus a registry for images.</p></div></details>
+        </div>
+
+        <div class="qgroup">
+          <h3>Images and Dockerfile</h3>
+          <details class="q"><summary>What is a layer?</summary><div class="a"><p>A read-only set of file changes made by one Dockerfile line. Layers are cached and shared between images.</p></div></details>
+          <details class="q"><summary>How do you make builds faster?</summary><div class="a"><p>Put rarely-changing lines first, copy <code>pom.xml</code> and download dependencies before <code>src</code>, use <code>.dockerignore</code>, BuildKit cache mounts and multi-stage builds.</p></div></details>
+          <details class="q"><summary>How do you make the image smaller?</summary><div class="a"><p>Multi-stage build, a JRE or distroless base instead of a JDK, install and clean up in one RUN, and a <code>.dockerignore</code>. Find the big layer with <code>docker history</code>.</p></div></details>
+          <details class="q"><summary>CMD vs ENTRYPOINT?</summary><div class="a"><p>ENTRYPOINT is the command, CMD is the default arguments. Args after <code>docker run</code> replace CMD; <code>--entrypoint</code> replaces ENTRYPOINT.</p></div></details>
+          <details class="q"><summary>What is a dangling image?</summary><div class="a"><p>Old untagged <code>&lt;none&gt;</code> layers left after rebuilding a tag. Remove them with <code>docker image prune</code>.</p></div></details>
+        </div>
+
+        <div class="qgroup">
+          <h3>Storage and networking</h3>
+          <details class="q"><summary>Volume vs bind mount?</summary><div class="a"><p>A folder managed by Docker (portable, easy to back up) versus a specific host path. Volumes for DB data, bind mounts for dev and config.</p></div></details>
+          <details class="q"><summary>How do two containers talk to each other?</summary><div class="a"><p>On the same user-defined network, using the service or container name (Docker's built-in DNS) and the container port.</p></div></details>
+          <details class="q"><summary>Bridge vs host vs overlay?</summary><div class="a"><p>Private network on one host / share the host's network / span many hosts.</p></div></details>
+        </div>
+
+        <div class="qgroup">
+          <h3>Compose</h3>
+          <details class="q"><summary>Compose vs Dockerfile?</summary><div class="a"><p>A Dockerfile builds one image; Compose runs and connects many containers.</p></div></details>
+          <details class="q"><summary>The app starts before the DB is ready — how do you fix it?</summary><div class="a"><p>Add a <code>healthcheck</code> on the DB and <code>depends_on: condition: service_healthy</code>, and add retry in the app (HikariCP <code>initializationFailTimeout</code>, Flyway retries).</p></div></details>
+        </div>
+
+        <div class="qgroup">
+          <h3>Spring Boot</h3>
+          <details class="q"><summary>How do you dockerize a Spring Boot app?</summary><div class="a"><p>Multi-stage build: Maven builds the JAR, <code>jarmode=tools extract --layers</code> splits it, copy the 4 layers into a small JRE image, run as non-root, use exec-form ENTRYPOINT, and pass config through env vars. Or use <code>mvn spring-boot:build-image</code> and skip the Dockerfile.</p></div></details>
+          <details class="q"><summary>Why layered jars?</summary><div class="a"><p>Dependencies rarely change and your code changes often, so only the small <code>application</code> layer is rebuilt, pushed and pulled.</p></div></details>
+          <details class="q"><summary>How do you set JVM memory in a container?</summary><div class="a"><p><code>UseContainerSupport</code> (on by default since JDK 10) reads the container limits. Set <code>MaxRAMPercentage=75</code> and leave room for metaspace, threads and direct buffers, or you get exit 137.</p></div></details>
+          <details class="q"><summary>How do you handle profiles and config?</summary><div class="a"><p><code>SPRING_PROFILES_ACTIVE</code> and env vars: one image, different config per environment, and secrets passed at runtime.</p></div></details>
+          <details class="q"><summary>How do you get a clean shutdown?</summary><div class="a"><p><code>server.shutdown=graceful</code> plus exec-form ENTRYPOINT, so the JVM is PID 1 and gets SIGTERM within the 10 second window.</p></div></details>
+          <details class="q"><summary>How do you expose health?</summary><div class="a"><p>Actuator liveness and readiness endpoints, a Docker <code>HEALTHCHECK</code>, and in Kubernetes the liveness, readiness and startup probes.</p></div></details>
+          <details class="q"><summary>How do you test against a real database?</summary><div class="a"><p>Testcontainers with <code>@ServiceConnection</code>, and <code>spring-boot-docker-compose</code> for local development.</p></div></details>
+        </div>
+
+        <div class="qgroup">
+          <h3>Security</h3>
+          <details class="q"><summary>How do you secure a container?</summary><div class="a"><p>Non-root user, small pinned base image, regular scanning, no secrets in the image, read-only filesystem, dropped capabilities, never mount the Docker socket, and a rootless daemon.</p></div></details>
+          <details class="q"><summary>How do you handle secrets?</summary><div class="a"><p>Only at runtime: env from a secret manager, Docker or Kubernetes secrets, Vault, or BuildKit secret mounts. Never inside a layer.</p></div></details>
+        </div>
+      </section>
+
+      <hr>
+
+      <section id="s17">
+        <h2><span class="num">17</span>Debugging playbook</h2>
+        <p>Scenario questions check whether you have a method. Say the steps out loud.</p>
+
+        <h3>"The container exits immediately."</h3>
+        <p><code>docker ps -a</code> for the exit code → <code>docker logs</code> → <code>docker inspect</code>. Usual reasons: the app failed at startup (wrong datasource URL, missing env var), CMD was not a foreground process, a wrong path or entrypoint (127), or out of memory (137). Reproduce it with <code>docker run -it --entrypoint sh image</code> and run the command by hand.</p>
+
+        <h3>"It works locally but not in Docker."</h3>
+        <p>Usually config, not code: <code>localhost</code> instead of the service name, a missing env var or profile, a port not published, a file path or permission the non-root user can't write, DNS on the default bridge, timezone or locale, or the wrong CPU architecture.</p>
+
+        <h3>"It gets killed under load (137)."</h3>
+        <p><code>docker inspect --format '{{.State.OOMKilled}}'</code> — if true, raise <code>--memory</code> or lower <code>MaxRAMPercentage</code>. Look for a leak with <code>-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/dump</code> writing to a mounted volume, plus Actuator metrics.</p>
+
+        <h3>"<code>docker stop</code> always takes 10 seconds."</h3>
+        <p>PID 1 is not getting or handling SIGTERM. Use exec form, add <code>--init</code>, and turn on graceful shutdown.</p>
+
+        <h3>"My code change didn't appear after rebuild."</h3>
+        <p>Either the layer cache is stale or you are running the old tag. Try <code>docker build --no-cache</code>, check the image ID, use <code>docker compose up --build</code>, and make sure <code>.dockerignore</code> is not excluding your source.</p>
+
+        <h3>"The image is 1.2 GB."</h3>
+        <p><code>docker history</code> to find the big layer, then multi-stage build + JRE base + cleanup in the same RUN.</p>
+
+        <h3>"The app can't reach MySQL."</h3>
+        <p>Same network? (<code>docker network inspect</code>) Using the service name and the <em>container</em> port? Was the DB ready? Are the env vars correct? Then <code>docker exec -it app sh</code> and <code>nc -zv mysql 3306</code>.</p>
+      </section>
+
+      <hr>
+
+      <section id="s18">
+        <h2><span class="num">18</span>Practice tasks</h2>
+        <p>Do these once and you will have real examples instead of definitions.</p>
+        <ol>
+          <li>Dockerize one Spring Boot service two ways — your own multi-stage Dockerfile and <code>spring-boot:build-image</code>. Compare image size and rebuild time after a one-line change.</li>
+          <li>Run <code>docker history</code> on your image, find the biggest layer, and remove it.</li>
+          <li>Compose: app + MySQL + healthcheck with <code>depends_on</code>. Stop the DB container and see what the app does. Add a named volume and check the data survives <code>docker compose down</code> and disappears with <code>down -v</code>.</li>
+          <li>Run with <code>--memory=512m</code> and default JVM settings, put load on it, get exit 137, then fix it with <code>MaxRAMPercentage</code>.</li>
+          <li>Break things on purpose: use shell-form ENTRYPOINT and time <code>docker stop</code>; use the default bridge and watch DNS fail.</li>
+          <li>Try <code>docker buildx build --platform linux/amd64,linux/arm64</code>.</li>
+        </ol>
+      </section>
+
+      <footer class="sources">
+        <h2>Sources</h2>
+        <ul>
+          <li>Docker docs — <a href="https://docs.docker.com/get-started/">Get started</a>, <a href="https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-a-container/">What is a container</a>, <a href="https://docs.docker.com/build/building/best-practices/">Dockerfile best practices</a></li>
+          <li>Spring Boot reference — <a href="https://docs.spring.io/spring-boot/reference/packaging/container-images/dockerfiles.html">Container images / Dockerfiles</a></li>
+          <li>Docker blog — <a href="https://www.docker.com/blog/9-tips-for-containerizing-your-spring-boot-code/">9 tips for containerizing Spring Boot</a></li>
+          <li>Interview question sets — <a href="https://kodekloud.com/blog/docker-interview-questions/">KodeKloud</a>, <a href="https://www.dataquest.io/blog/docker-interview-questions-and-answers/">Dataquest</a>, <a href="https://www.datacamp.com/blog/docker-interview-questions">DataCamp</a>, <a href="https://github.com/Devinterview-io/docker-interview-questions">Devinterview-io</a></li>
+        </ul>
+      </footer>
+
+    </main>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var links = Array.prototype.slice.call(document.querySelectorAll('nav.rail a'));
+    var map = {};
+    links.forEach(function (a) { map[a.getAttribute('href').slice(1)] = a; });
+
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) {
+            links.forEach(function (a) { a.classList.remove('on'); });
+            var a = map[e.target.id];
+            if (a) a.classList.add('on');
+          }
+        });
+      }, { rootMargin: '-10% 0px -75% 0px', threshold: 0 });
+      document.querySelectorAll('section[id]').forEach(function (s) { io.observe(s); });
+    }
+
+    document.querySelectorAll('.qtools button').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var open = btn.getAttribute('data-all') === 'open';
+        document.querySelectorAll('details.q').forEach(function (d) { d.open = open; });
+      });
+    });
+  })();
+</script>
+
+</body>
+</html>
