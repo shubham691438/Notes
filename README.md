@@ -7,6 +7,7 @@ Written to be re-read quickly before interviews, design discussions and reviews.
 
 | Topic | What's in it |
 |---|---|
+| [dsa/](dsa/) | Data structures, algorithms, problem patterns |
 | [devops/](devops/) | Docker, CI/CD, deployment, infrastructure |
 | [java/](java/) | Core Java, collections, concurrency, JVM |
 | [spring-boot/](spring-boot/) | Spring Framework, Spring Boot, Spring Data, testing |
@@ -15,6 +16,7 @@ Written to be re-read quickly before interviews, design discussions and reviews.
 
 ### Latest notes
 
+- [Trie](dsa/trie.md) — prefix tree: structure, Java implementation, `search` vs `startsWith`, applications like autocomplete and spell check
 - [Docker — interview revision](devops/docker/docker-interview-revision.md) — Docker for Java/Spring Boot interviews: concepts, commands, layered jars, JVM in containers, Q&A
 
 ## How this repo is organised
@@ -24,6 +26,9 @@ Notes/
 ├── README.md                 <- you are here (index)
 ├── templates/
 │   └── note-template.md      <- copy this when starting a new note
+├── dsa/
+│   ├── README.md             <- index for this topic
+│   └── trie.md
 ├── devops/
 │   ├── README.md             <- index for this topic
 │   └── docker/
