@@ -30,7 +30,7 @@ from someone who only read the docs.
 | 6 | [Images size and tags](#6-images-size-and-tags) | Multi-stage, base images, `latest`, dangling images |
 | ⭐ 7 | [Spring Boot and Docker](#7-spring-boot-and-docker) | Layered jars, buildpacks, JVM memory, shutdown, health |
 | 8 | [Data and storage](#8-data-and-storage) | Volumes, bind mounts, tmpfs, copy-on-write |
-| 8 | [Networking](#9-networking) | Bridge, host, overlay, DNS by container name |
+| 9 | [Networking](#9-networking) | Bridge, host, overlay, DNS by container name |
 | 10 | [Docker Compose](#10-docker-compose) | A full app + DB file, `depends_on`, healthchecks |
 | ⭐ 11 | [Exit codes and debugging](#11-exit-codes-and-debugging) | 137, 143, 127, restart policies, logs |
 | 12 | [Security checklist](#12-security-checklist) | Non-root, secrets, scanning, capabilities |
