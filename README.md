@@ -16,6 +16,7 @@ Written to be re-read quickly before interviews, design discussions and reviews.
 
 ### Latest notes
 
+- [Kubernetes — interview revision](devops/kubernetes/kubernetes-interview-revision.md) — objects, kubectl, Spring Boot probes and memory sizing, rollouts, debugging, Q&A
 - [Trie](dsa/trie.md) — prefix tree: structure, Java implementation, `search` vs `startsWith`, applications like autocomplete and spell check
 - [Docker — interview revision](devops/docker/docker-interview-revision.md) — Docker for Java/Spring Boot interviews: concepts, commands, layered jars, JVM in containers, Q&A
 
@@ -31,10 +32,13 @@ Notes/
 │   └── trie.md
 ├── devops/
 │   ├── README.md             <- index for this topic
-│   └── docker/
+│   ├── docker/
+│   │   ├── README.md
+│   │   ├── docker-interview-revision.md
+│   │   └── exports/          <- rendered PDF / HTML of the note
+│   └── kubernetes/
 │       ├── README.md
-│       ├── docker-interview-revision.md
-│       └── exports/          <- rendered PDF / HTML of the note
+│       └── kubernetes-interview-revision.md
 ├── java/
 ├── spring-boot/
 ├── databases/

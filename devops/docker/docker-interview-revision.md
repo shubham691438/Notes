@@ -695,6 +695,9 @@ volumes:
 
 Docker builds and runs containers on **one machine**. Kubernetes runs them across **many machines**: scheduling, restarting failed pods, scaling, service discovery, rolling deploys, config and secrets. Compose is for dev and one host; Kubernetes is for production at scale. Kubernetes removed the Docker runtime shim (dockershim) but still runs Docker-built **OCI** images through containerd. Docker Swarm is Docker's own simpler orchestrator, mostly old now.
 
+> [!TIP]
+> Full note: [**Kubernetes, before the interview**](../kubernetes/kubernetes-interview-revision.md) — objects, kubectl, Spring Boot probes and memory sizing, rollouts and debugging.
+
 <sub>[⬆ back to top](#table-of-contents)</sub>
 
 ---
